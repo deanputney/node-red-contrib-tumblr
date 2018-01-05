@@ -78,7 +78,6 @@ module.exports = function(RED) {
     RED.httpAdmin.get('/tumblr-credentials/:id/auth/callback', function(req, res, next) {
         var credentials = RED.nodes.getCredentials(req.params.id);
         credentials.oauth_verifier = req.query.oauth_verifier;
-        RED.log.error(credentials);
 
         oa.getOAuthAccessToken(
             credentials.oauth_token,
@@ -90,6 +89,7 @@ module.exports = function(RED) {
                     res.send(RED._("tumblr.errors.oauthbroke"));
                 }
                 else {
+                    RED.log.error(results);
                     credentials = {};
                     credentials.access_token = oauth_access_token;
                     credentials.access_token_secret = oauth_access_token_secret;
