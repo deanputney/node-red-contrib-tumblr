@@ -25,7 +25,7 @@
             var tumblrConfigNodeId = this.id;
             var clickhere = this._("tumblr.label.clickhere");
             var tumblrID = this._("tumblr.label.tumblr-id");
-            function showtumblrAuthStart() {
+            function showTumblrAuthStart() {
                 var pathname = document.location.pathname;
                 if (pathname.slice(-1) != "/") {
                     pathname += "/";
@@ -108,17 +108,7 @@
                 return this.name;
             }
             var uname = RED.nodes.node(this.tumblr);
-            if (this.user == "dm") {
-                return (uname?uname.label()+" ":"")+this._("tumblr.label.dmslabel");
-            } else if (this.user == "event") {
-                var user = RED.nodes.node(this.tumblr);
-                return (user?user.label()+" ":"")+this._("tumblr.label.eventslabel");
-            } else if (this.user == "user") {
-                return this.tags+" "+this._("tumblr.label.tweetslabel");
-            }
-            else if (this.user == "true") {
-                return this._("tumblr.label.followers") + (uname?(" "+uname.label()):"");
-            }
+
             return "tumblr";
         },
         labelStyle: function() {
