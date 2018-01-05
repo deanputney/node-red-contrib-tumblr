@@ -78,7 +78,7 @@ module.exports = function(RED) {
     RED.httpAdmin.get('/tumblr-credentials/:id/auth/callback', function(req, res, next) {
         var credentials = RED.nodes.getCredentials(req.params.id);
         credentials.oauth_verifier = req.query.oauth_verifier;
-        RED.log.info('credentials: '+credentials);
+        RED.log.error('credentials: '+credentials);
 
         oa.getOAuthAccessToken(
             credentials.oauth_token,
