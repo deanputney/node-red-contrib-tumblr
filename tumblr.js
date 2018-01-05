@@ -98,7 +98,12 @@ module.exports = function(RED) {
                         access_token_secret: credentials.access_token_secret
                     });
                     client.userInfo(function(err, data) {
-                      RED.log.error(data.user);
+                      if(err){
+                        RED.log.error(err);
+                      }
+                      else {
+                        RED.log.error(data);
+                      }
                     });
 
                     credentials.screen_name = "@"+results.screen_name;
