@@ -65,8 +65,6 @@ module.exports = function(RED) {
                 res.send(resp);
             }
             else {
-                RED.log.info('oauth_token:'+oauth_token);
-                RED.log.info('oauth_token_secret:'+oauth_token_secret);
                 credentials.oauth_token = oauth_token;
                 credentials.oauth_token_secret = oauth_token_secret;
                 res.redirect('https://www.tumblr.com/oauth/authorize?oauth_token='+oauth_token);
@@ -89,10 +87,20 @@ module.exports = function(RED) {
                     res.send(RED._("tumblr.errors.oauthbroke"));
                 }
                 else {
-                    RED.log.error(results);
                     credentials = {};
                     credentials.access_token = oauth_access_token;
                     credentials.access_token_secret = oauth_access_token_secret;
+                    
+                    var client = new tumblr.Client({
+                        consumer_key: "twtQpl4VV5Nh2VGzxSJ5vwUX0LkzPeyVYkeXsv82sojfgfCOEV",
+                        consumer_secret: "CJZJiHvn17kbkp846e1LOMqJxtgkztDRG4uhsCJIJVVxUK37XQ",
+                        access_token_key: credentials.access_token,
+                        access_token_secret: credentials.access_token_secret
+                    });
+                    client.userInfo(function(err, data) {
+                      RED.log.error(data.user);
+                    });
+
                     credentials.screen_name = "@"+results.screen_name;
                     RED.nodes.addCredentials(req.params.id,credentials);
                     res.send(RED._("tumblr.errors.authorized"));
