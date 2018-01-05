@@ -49,7 +49,7 @@ module.exports = function(RED) {
         "https://www.tumblr.com/oauth/access_token",
         "twtQpl4VV5Nh2VGzxSJ5vwUX0LkzPeyVYkeXsv82sojfgfCOEV",
         "CJZJiHvn17kbkp846e1LOMqJxtgkztDRG4uhsCJIJVVxUK37XQ",
-        "1.0A",
+        "1.0",
         null,
         "HMAC-SHA1"
     );
@@ -65,6 +65,8 @@ module.exports = function(RED) {
                 res.send(resp);
             }
             else {
+                RED.log.info('oauth_token:'+oauth_token);
+                RED.log.info('oauth_token_secret:'+oauth_token_secret);
                 credentials.oauth_token = oauth_token;
                 credentials.oauth_token_secret = oauth_token_secret;
                 res.redirect('https://www.tumblr.com/oauth/authorize?oauth_token='+oauth_token);
