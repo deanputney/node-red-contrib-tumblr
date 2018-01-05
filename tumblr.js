@@ -1,6 +1,7 @@
 module.exports = function(RED) {
     "use strict";
     var tumblrAPI = require('tumblr.js');
+    var OAuth= require('oauth').OAuth;
 
     function TumblrNode(n) {
         RED.nodes.createNode(this,n);
