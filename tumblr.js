@@ -49,7 +49,7 @@ module.exports = function(RED) {
         "https://www.tumblr.com/oauth/access_token",
         "twtQpl4VV5Nh2VGzxSJ5vwUX0LkzPeyVYkeXsv82sojfgfCOEV",
         "CJZJiHvn17kbkp846e1LOMqJxtgkztDRG4uhsCJIJVVxUK37XQ",
-        "1.0",
+        "1.0A",
         null,
         "HMAC-SHA1"
     );
@@ -78,6 +78,7 @@ module.exports = function(RED) {
     RED.httpAdmin.get('/tumblr-credentials/:id/auth/callback', function(req, res, next) {
         var credentials = RED.nodes.getCredentials(req.params.id);
         credentials.oauth_verifier = req.query.oauth_verifier;
+        RED.log.info('credentials: '+credentials);
 
         oa.getOAuthAccessToken(
             credentials.oauth_token,
