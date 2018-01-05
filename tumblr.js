@@ -82,7 +82,7 @@ module.exports = function(RED) {
 
         oa.getOAuthAccessToken(
             credentials.oauth_token,
-            credentials.token_secret,
+            credentials.oauth_token_secret,
             credentials.oauth_verifier,
             function(error, oauth_access_token, oauth_access_token_secret, results) {
                 if (error) {
