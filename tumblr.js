@@ -21,7 +21,7 @@ module.exports = function(RED) {
             var credentials = RED.nodes.getCredentials(this.tumblr);
 
             if (credentials && credentials.screen_name == this.tumblrConfig.screen_name) {
-               var client = new tumblr.Client({
+               var client = new tumblrAPI.Client({
                    consumer_key: "twtQpl4VV5Nh2VGzxSJ5vwUX0LkzPeyVYkeXsv82sojfgfCOEV",
                    consumer_secret: "CJZJiHvn17kbkp846e1LOMqJxtgkztDRG4uhsCJIJVVxUK37XQ",
                    access_token_key: credentials.access_token,
@@ -90,8 +90,8 @@ module.exports = function(RED) {
                     credentials = {};
                     credentials.access_token = oauth_access_token;
                     credentials.access_token_secret = oauth_access_token_secret;
-                    
-                    var client = new tumblr.Client({
+
+                    var client = new tumblrAPI.Client({
                         consumer_key: "twtQpl4VV5Nh2VGzxSJ5vwUX0LkzPeyVYkeXsv82sojfgfCOEV",
                         consumer_secret: "CJZJiHvn17kbkp846e1LOMqJxtgkztDRG4uhsCJIJVVxUK37XQ",
                         access_token_key: credentials.access_token,
