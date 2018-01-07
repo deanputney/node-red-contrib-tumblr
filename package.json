@@ -11,7 +11,10 @@
     "url": "git+https://github.com/jjcantillon/node-red-contrib-tumblr.git"
   },
   "keywords": [
-    "node-red-contrib-tumblr"
+    "node-red",
+    "contrib-tumblr",
+    "node-red-contrib-tumblr",
+    "tumblr"
   ],
   "author": "JJ Cantillon",
   "license": "MIT",
