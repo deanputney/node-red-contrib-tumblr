@@ -79,6 +79,9 @@ module.exports = function(RED) {
                     if (msg.hasOwnProperty("tags")) {
                       params.tags = msg.tags;
                     }
+                    if (msg.hasOwnProperty("state")) {
+                      params.state = msg.state;
+                    }
                     client.createPhotoPost(node.blog, params, function(err,data){
                       if(err){
                         node.status({fill:"red", shape:"ring", text:" "});
