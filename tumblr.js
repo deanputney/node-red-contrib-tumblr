@@ -90,11 +90,14 @@ module.exports = function(RED) {
                       else {
                         node.status({fill:"green", shape:"dot", text:" "});
                         node.log(RED._("tumblr.log.posted",{postid:data.id}),msg);
+                        msg.tumblrResponseData = data;
+                        node.send(msg);
+                        node.status({});
                       }
                     });
                 } else {
                   node.status({fill:"yellow", shape:"ring", text:RED._("tumblr.errors.nopayload")});
-                  node.warn(RED._("tumblr.errors.nopayload"));
+                  node.error(RED._("tumblr.errors.nopayload"));
                 }
             });
         }

@@ -124,9 +124,14 @@
 
 <script type="text/x-red" data-help-name="tumblr out">
     <p>Tumblr photo out node. Posts the photo in <code>msg.payload</code> if it is a Buffer object.</p>
+    <p><strong>Input:</strong></p>
     <p>If <code>msg.caption</code> exists this node will use it as the photo caption.</p>
     <p>If <code>msg.tags</code> exists this node will use it as the photo tags. (comma seperated list)</p>
     <p>If <code>msg.state</code> exists this node will use it to set the post state.</p>
+    <p><strong>Output:</strong></p>
+    <p>The msg object will be returned. If the tumblr API responds without error this node will set
+    <code>msg.tumblrResponseData</code> to the response data</p>
+
 </script>
 
 <script type="text/javascript">
@@ -139,7 +144,7 @@
             name: {value:"Post"}
         },
         inputs:1,
-        outputs:0,
+        outputs:1,
         label: function() {
             return this.name;
         }
