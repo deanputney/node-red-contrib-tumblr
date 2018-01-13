@@ -2,8 +2,8 @@ module.exports = function(RED) {
     "use strict";
     var tumblrAPI = require('tumblr.js');
     var OAuth= require('oauth').OAuth;
-    var tumblr_api_consumer_key = 'twtQpl4VV5Nh2VGzxSJ5vwUX0LkzPeyVYkeXsv82sojfgfCOEV';
-    var tumblr_api_conmsumer_secret = 'CJZJiHvn17kbkp846e1LOMqJxtgkztDRG4uhsCJIJVVxUK37XQ';
+    var tumblr_api_consumer_key = 'cD9L2H9aMdTpyhsOXUtGz1VYDv00myzSl2j45lALiQ76Mk9bsC';
+    var tumblr_api_conmsumer_secret = 'ecqEp6pX8ItATC2smpdg13Q0YgXsoh1M5uiJRy9GRcNO43GclV';
 
     var oa = new OAuth(
         "https://www.tumblr.com/oauth/request_token",
@@ -27,32 +27,7 @@ module.exports = function(RED) {
         }
     });
 
-    function TumblrInNode(n) {
-        RED.nodes.createNode(this,n);
-            this.tumblr = n.tumblr;
-            this.tumblrConfig = RED.nodes.getNode(this.tumblr);
-            var credentials = RED.nodes.getCredentials(this.tumblr);
-            var node = this;
-
-            if (credentials && credentials.screen_name == this.tumblrConfig.screen_name) {
-               var client = new tumblrAPI.Client({
-                   consumer_key: tumblr_api_consumer_key,
-                   consumer_secret: tumblr_api_conmsumer_secret,
-                   token: credentials.access_token,
-                   token_secret: credentials.access_token_secret
-               });
-
-              client.userInfo(function(err, data) {
-                data.user.blogs.forEach(function(blog) {
-                  console.log(blog.name);
-                });
-              });
-            }
-    }
-    RED.nodes.registerType("tumblr in",TumblrInNode);
-
-
-    function TumblrOutNode(n) {
+    function TumblrPhotoOutNode(n) {
         RED.nodes.createNode(this,n);
         this.tumblr = n.tumblr;
         this.blog = n.blog;
@@ -70,7 +45,7 @@ module.exports = function(RED) {
 
             node.on("input", function(msg) {
                 if (msg.hasOwnProperty("payload") && Buffer.isBuffer(msg.payload)) {
-                    node.status({fill:"blue",shape:"dot",text:"tumblr.status.posting"});
+                    var blog = node.blog;
                     var params = {};
                     params.data64 = msg.payload.toString('base64');
                     if (msg.hasOwnProperty("caption")) {
@@ -82,7 +57,11 @@ module.exports = function(RED) {
                     if (msg.hasOwnProperty("state")) {
                       params.state = msg.state;
                     }
-                    client.createPhotoPost(node.blog, params, function(err,data){
+                    if (msg.hasOwnProperty("blog")) {
+                      blog = msg.blog;
+                    }
+                    node.status({fill:"blue",shape:"dot",text:"tumblr.status.posting"});
+                    client.createPhotoPost(blog, params, function(err,data){
                       if(err){
                         node.status({fill:"red", shape:"ring", text:" "});
                         node.error(RED._("tumblr.errors.postfail",{error:err}),msg);
@@ -90,7 +69,7 @@ module.exports = function(RED) {
                       else {
                         node.status({fill:"green", shape:"dot", text:" "});
                         node.log(RED._("tumblr.log.posted",{postid:data.id}),msg);
-                        msg.tumblrResponseData = data;
+                        msg.payload = data;
                         node.send(msg);
                         node.status({});
                       }
@@ -102,7 +81,7 @@ module.exports = function(RED) {
             });
         }
     }
-    RED.nodes.registerType("tumblr out",TumblrOutNode);
+    RED.nodes.registerType("tumblr photo out",TumblrPhotoOutNode);
 
     RED.httpAdmin.get('/tumblr-credentials/:id/auth', function(req, res) {
         var credentials = {};

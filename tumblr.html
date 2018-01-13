@@ -76,38 +76,7 @@
 })();
 </script>
 
-<script type="text/x-red" data-template-name="tumblr in">
-    <div class="form-row">
-        <label for="node-input-tumblr"><i class="fa fa-user"></i> <span data-i18n="tumblr.label.tumblr-user-name"></span></label>
-        <input type="text" id="node-input-tumblr">
-    </div>
-</script>
-
-<script type="text/x-red" data-help-name="tumblr in">
-    <p>Tumblr input node.
-    </p>
-</script>
-
-<script type="text/javascript">
-    RED.nodes.registerType('tumblr in',{
-        category: 'social-input',
-        color:"#A6BBCF",
-        defaults: {
-            tumblr: {type:"tumblr-credentials",required:true},
-            tags: {value:""},
-            user: {value:"false",required:true},
-            name: {value:""},
-            topic: {value:"tweets"},
-            inputs: {value:0}
-        },
-        inputs: 0,
-        outputs: 1,
-        icon: "tumblr.png"
-    });
-</script>
-
-
-<script type="text/x-red" data-template-name="tumblr out">
+<script type="text/x-red" data-template-name="tumblr photo out">
     <div class="form-row">
         <label for="node-input-tumblr"><i class="fa fa-user"></i> <span data-i18n="tumblr.label.tumblr-user-name"></span></label>
         <input type="text" id="node-input-tumblr">
@@ -122,29 +91,57 @@
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="tumblr out">
-    <p>Tumblr photo out node. Posts the photo in <code>msg.payload</code> if it is a Buffer object.</p>
-    <p><strong>Input:</strong></p>
-    <p>If <code>msg.caption</code> exists this node will use it as the photo caption.</p>
-    <p>If <code>msg.tags</code> exists this node will use it as the photo tags. (comma seperated list)</p>
-    <p>If <code>msg.state</code> exists this node will use it to set the post state.</p>
-    <p><strong>Output:</strong></p>
-    <p>The msg object will be returned. If the tumblr API responds without error this node will set
-    <code>msg.tumblrResponseData</code> to the response data</p>
+<script type="text/x-red" data-help-name="tumblr photo out">
+<p>Connects to Tumblr and posts photos on the chosen blog.</p>
 
+<h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload <span class="property-type">buffer</span></dt>
+        <dd> A buffer containing the image to post. </dd>
+        <dt class="optional">caption <span class="property-type">string</span></dt>
+        <dd> Used as the photo caption.</dd>
+        <dt class="optional">tags <span class="property-type">string</span></dt>
+        <dd> Tags for the photo. (Comma seperated list).</dd>
+        <dt class="optional">state <span class="property-type">string</span></dt>
+        <dd> State for the post - see Tumbler API docs for details.</dd>
+        <dt class="optional">blog <span class="property-type">string</span></dt>
+        <dd> Used to override the blog specified in the node settings.</dd>
+    </dl>
+
+ <h3>Outputs</h3>
+     <ol class="node-ports">
+         <dl class="message-properties">
+             <dt>payload <span class="property-type">string</span></dt>
+             <dd>If the tumblr API reponds without error the response data
+             will be returned.</dd>
+         </dl>
+     </ol>
+
+<h3>Details</h3>
+    <p>Tumblr photo out node. Posts the photo in <code>msg.payload</code> if it
+    is a Buffer to the blog name set it the node configuration.</p>
+    <p>In order to use this node you will need to authenticate with Tumblr to
+    allow access to your blogs.</p>
+
+<h3>References</h3>
+    <ul>
+        <li><a href="https://github.com/tumblr/tumblr.js/">tumblr.js</a> - This node uses the official client library for the Tumblr API.</li>
+        <li><a href="https://www.tumblr.com/docs/en/api/v2#posting">Tumblr API docs</a> - full description of <code>msg.state</code> and <code>msg.tags</code> property</li>
+    </ul>
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('tumblr out',{
+    RED.nodes.registerType('tumblr photo out',{
         category: 'social-output',
         color:"#A6BBCF",
         defaults: {
             tumblr: {type:"tumblr-credentials",required:true},
             blog: {value:"",required:true},
-            name: {value:"Post"}
+            name: {value:"Post photo to Tumblr"}
         },
         inputs:1,
         outputs:1,
+        icon: "tumblr.png",
         label: function() {
             return this.name;
         }
