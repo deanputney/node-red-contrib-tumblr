@@ -96,8 +96,8 @@
 
 <h3>Inputs</h3>
     <dl class="message-properties">
-        <dt>payload <span class="property-type">buffer</span></dt>
-        <dd> A buffer containing the image to post. </dd>
+        <dt>payload <span class="property-type">string | buffer</span></dt>
+        <dd> A string containing the source url of the image or a buffer containing the image to post. </dd>
         <dt class="optional">caption <span class="property-type">string</span></dt>
         <dd> Used as the photo caption.</dd>
         <dt class="optional">tags <span class="property-type">string</span></dt>
@@ -120,6 +120,7 @@
 <h3>Details</h3>
     <p>Tumblr photo out node. Posts the photo in <code>msg.payload</code> if it
     is a Buffer to the blog name set it the node configuration.</p>
+    <p>If a string is supplied it will be used as the url of the photo to post</p>
     <p>In order to use this node you will need to authenticate with Tumblr to
     allow access to your blogs.</p>
 

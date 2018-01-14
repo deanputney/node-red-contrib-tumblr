@@ -44,36 +44,44 @@ module.exports = function(RED) {
             });
 
             node.on("input", function(msg) {
-                if (msg.hasOwnProperty("payload") && Buffer.isBuffer(msg.payload)) {
-                    var blog = node.blog;
-                    var params = {};
-                    params.data64 = msg.payload.toString('base64');
-                    if (msg.hasOwnProperty("caption")) {
-                      params.caption = msg.caption;
+                if (msg.hasOwnProperty("payload")) {
+                    // check payload valid type
+                    if (Buffer.isBuffer(msg.payload) || typeof msg.payload === 'string' || msg.payload instanceof String ) {
+                        var blog = node.blog;
+                        var params = {};
+                        if (Buffer.isBuffer(msg.payload)) {
+                            params.data64 = msg.payload.toString('base64');
+                        } else if (typeof msg.payload === 'string' || msg.payload instanceof String) {
+                            params.source = msg.payload;
+                        }
+                        if (msg.hasOwnProperty("caption")) {
+                          params.caption = msg.caption;
+                        }
+                        if (msg.hasOwnProperty("tags")) {
+                          params.tags = msg.tags;
+                        }
+                        if (msg.hasOwnProperty("state")) {
+                          params.state = msg.state;
+                        }
+                        if (msg.hasOwnProperty("blog")) {
+                          blog = msg.blog;
+                        }
+                        node.status({fill:"blue",shape:"dot",text:"tumblr.status.posting"});
+                        client.createPhotoPost(blog, params, function(err,data){
+                          if(err){
+                            node.status({fill:"red", shape:"ring", text:" "});
+                            node.error(RED._("tumblr.errors.postfail",{error:err}),msg);
+                          } else {
+                            node.status({fill:"green", shape:"dot", text:" "});
+                            node.log(RED._("tumblr.log.posted",{postid:data.id}),msg);
+                            msg.payload = data;
+                            node.send(msg);
+                            node.status({});
+                          }
+                        });
+                    } else {
+                        node.error(RED._("tumblr.errors.payloadnotvalid"));
                     }
-                    if (msg.hasOwnProperty("tags")) {
-                      params.tags = msg.tags;
-                    }
-                    if (msg.hasOwnProperty("state")) {
-                      params.state = msg.state;
-                    }
-                    if (msg.hasOwnProperty("blog")) {
-                      blog = msg.blog;
-                    }
-                    node.status({fill:"blue",shape:"dot",text:"tumblr.status.posting"});
-                    client.createPhotoPost(blog, params, function(err,data){
-                      if(err){
-                        node.status({fill:"red", shape:"ring", text:" "});
-                        node.error(RED._("tumblr.errors.postfail",{error:err}),msg);
-                      }
-                      else {
-                        node.status({fill:"green", shape:"dot", text:" "});
-                        node.log(RED._("tumblr.log.posted",{postid:data.id}),msg);
-                        msg.payload = data;
-                        node.send(msg);
-                        node.status({});
-                      }
-                    });
                 } else {
                   node.status({fill:"yellow", shape:"ring", text:RED._("tumblr.errors.nopayload")});
                   node.error(RED._("tumblr.errors.nopayload"));
@@ -92,8 +100,7 @@ module.exports = function(RED) {
                 var err = {statusCode: 401, data: "dummy error"};
                 var resp = RED._("tumblr.errors.oautherror",{statusCode: err.statusCode, errorData: err.data});
                 res.send(resp);
-            }
-            else {
+            } else {
                 credentials.oauth_token = oauth_token;
                 credentials.oauth_token_secret = oauth_token_secret;
                 res.redirect('https://www.tumblr.com/oauth/authorize?oauth_token='+oauth_token);
@@ -114,8 +121,7 @@ module.exports = function(RED) {
                 if (error) {
                     RED.log.error(error);
                     res.send(RED._("tumblr.errors.oauthbroke"));
-                }
-                else {
+                } else {
                     credentials = {};
                     credentials.access_token = oauth_access_token;
                     credentials.access_token_secret = oauth_access_token_secret;
@@ -131,8 +137,7 @@ module.exports = function(RED) {
                       if(err){
                         RED.log.error(err);
                         res.send(RED._("tumblr.errors.oauthbroke"));
-                      }
-                      else {
+                      } else {
                         credentials.screen_name = data.user.name;
                         RED.nodes.addCredentials(req.params.id,credentials);
                         res.send(RED._("tumblr.errors.authorized"));

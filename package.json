@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-tumblr",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Node-RED node to talk to Tumblr",
   "dependencies": {
     "oauth": "^0.9.15",
